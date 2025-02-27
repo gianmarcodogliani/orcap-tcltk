@@ -1,5 +1,3 @@
-package provide capExpVarPdf_package 1.0
-
 namespace eval expVarPdf { }
 
 proc expVarPdf::enable_journaling {} {
