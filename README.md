@@ -1,1 +1,1 @@
-# Cadence OrCAD X Capture, Tcl/Tk
+# Cadence OrCAD X Capture CIS, Tcl/Tk
