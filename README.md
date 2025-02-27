@@ -1,1 +1,1 @@
-# orcap-tcltk
+# Cadence OrCAD X Capture, Tcl/Tk
