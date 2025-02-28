@@ -4,7 +4,7 @@
 # GitHub: https://github.com/gianmarcodogliani/orcap-tcltk
 # Created: 2025-02-28
 # Updated: 2025-02-28
-# Description: This script sets up a custom pull-down menù within Capture's menù bar
+# Description: This script sets up a custom pull-down menù within Capture's menù bar.
 # Usage: Copy the script to the capAutoLoad directory and launch Capture.
 # License: MIT License
 # ---------------------------------------------------------------------------------------
