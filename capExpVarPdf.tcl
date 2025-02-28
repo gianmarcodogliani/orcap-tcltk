@@ -6,7 +6,7 @@
 # Updated: 2025-02-28
 # Description: This script automatically exports all design variants to pdf.
 # Usage: Source the script at the Capture command window, select the dsn from the Project
-#        Manager panel and type expVarPdf::export.
+#        Manager panel and type expVarPdf::export
 # License: MIT License
 # ---------------------------------------------------------------------------------------
 
