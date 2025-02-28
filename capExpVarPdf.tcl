@@ -1,3 +1,15 @@
+# ---------------------------------------------------------------------------------------
+# capExpVarPdf.tcl
+# Author: Gianmarco Dogliani
+# GitHub: https://github.com/gianmarcodogliani/orcap-tcltk
+# Created: 2025-02-27
+# Updated: 2025-02-28
+# Description: This script automatically exports all design variants to pdf.
+# Usage: Source the script at the Capture command window, select the dsn from the Project
+#        Manager panel and type expVarPdf::export.
+# License: MIT License
+# ---------------------------------------------------------------------------------------
+
 namespace eval expVarPdf { }
 
 proc expVarPdf::enable_journaling {} {
