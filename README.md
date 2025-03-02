@@ -1,6 +1,6 @@
 # Cadence OrCAD X Capture CIS, Tcl/Tk  
 
-- **getting-started-ITA.pdf**. Full guide for the usage of the Tcl/Tk estensions in OrCAD X. Only in italian for now, sorry!!
+- **getting-started-ITA.pdf**. Guide on the usage of the Tcl/Tk estensions in OrCAD X. Only in italian for now, sorry!!
 
 - **cupCusMenu**. Copy the script to the capAutoLoad directory and launch the tool. A custom pull-down menù is set up within the tool's menù bar!
    
