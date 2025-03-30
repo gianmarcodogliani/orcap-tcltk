@@ -17,11 +17,27 @@ proc orbench::open_design_in_session {dboSession designPath} {
     set dboDesign [$dboSession GetDesignAndSchematics $csDesignPath $dboState]
     return $dboDesign
 }
+proc orbench::close_session {dboSession dboDesign} {
+    DboSession_MarkAllLibForSave $dboSession $dboDesign
+    DboSession_SaveDesign $dboSession $dboDesign
+    DboSession_RemoveDesign $dboSession $dboDesign
+    DboTclHelper_sDeleteSession $dboSession
+    return
+}
 #
 #
 #
-proc orbench::get_schematic {dboDesign schematic} {
+proc orbench::get_name {dbObject} {
+    set csName [DboTclHelper_sMakeCString]
+    $dbObject GetName $csName
+    set name [DboTclHelper_sGetConstCharPtr $csName]
+    return $name
+}
+proc orbench::get_schematic {{dboDesign ""} schematic} {
     set dboState [DboState]
+    if {$dboDesign == ""} {
+        set dboDesign [GetActivePMDesign]
+    }
     set csSchematic [DboTclHelper_sMakeCString $schematic] 
     set dboSchematic [$dboDesign GetSchematic $csSchematic $dboState]
     return $dboSchematic
@@ -56,4 +72,25 @@ proc orbench::scan_pages {dboSchematic} {
         set dboPage [$pageIter NextPage $dboState]
     }
     delete_DboSchematicPagesIter $pageIter
+}
+proc orbench::scan_parts {dboPage schematicType} {
+    set dboState [DboState]
+    set partIter [$dboPage NewPartInstsIter $dboState]
+    set dboPartInst [$partIter NextPartInst $dboState]
+    while {$dboPartInst != "NULL"} {
+        if {$schematicType == "flat"} {
+            set dboPlacedInst [DboPartInstToDboPlacedInst $dboPartInst]
+            if {$dboPlacedInst != "NULL"} {
+                # process $dboPlacedInst
+            }
+        } elseif {$schematicType == "hier"} {
+            set dboDrawnInst [DboPartInstToDboDrawnInst $dboPartInst]
+            if {$dboDrawnInst != "NULL"} {
+                # process $dboDrawnInst
+            }
+        }
+    set dboPartInst [$partIter NextPartInst $dboState]
+    }
+    delete_DboPagePartInstsIter $partIter
+    return
 }
