@@ -168,7 +168,7 @@ proc orbench::scan_globals {dboPage} {
     set globalIter [$dboPage NewGlobalsIter $dboState]  
     set dboGlobal [$globalIter NextGlobal $dboState] 
     while {$dboGlobal != "NULL"} { 
-        # process bus $dboGlobal
+        # process $dboGlobal
         set dboGlobal [$globalIter NextGlobal $dboState] 
     } 
     delete_DboPageGlobalsIter $globalIter
