@@ -33,6 +33,59 @@ proc orbench::get_name {dbObject} {
     set name [DboTclHelper_sGetConstCharPtr $csName]
     return $name
 }
+proc orbench::get_value {dbObject {type ""}} {
+    set csValue [DboTclHelper_sMakeCString]
+    if {$type == "display"} {   ;# display property
+        $dbObject GetValueString $csValue
+    } else {   ;# user property
+        $dbObject GetStringValue $csValue
+    }
+    set value [DboTclHelper_sGetConstCharPtr $csValue]
+    return $value
+}
+proc orbench::scan_dprops {dbObject} {   ;# display properties
+    set dboState [DboState]
+    set propIter [$dbObject NewDisplayPropsIter $dboState] 
+    set dboProp [$propIter NextProp $dboState] 
+    while {$dboProp != "NULL"} {  
+        set name [orbench::get_name $dboProp]
+        set value [orbench::get_value $dboProp display]   ;# display
+        # process $name and $value
+        set dboProp [$propIter NextProp $dboState] 
+    } 
+    delete_DboDisplayPropsIter $propIter
+    return
+}
+proc orbench::scan_uprops {dbObject} {   ;# user properties
+    set dboState [DboState]
+    set propIter [$dbObject NewUserPropsIter $dboState] 
+    set dboProp [$propIter NextUserProp $dboState] 
+    while {$dboProp != "NULL"} {  
+        set name [orbench::get_name $dboProp] 
+        set value [orbench::get_value $dboProp ""]   ;# user
+        # process $name and $value
+        set dboProp [$propIter NextUserProp $dboState] 
+    } 
+    delete_DboUserPropsIter $propIter
+    return
+}
+proc orbench::scan_eprops {dbObject} {   ;# effective propreties
+    set dboState [DboState]
+    set propIter [$dbObject NewEffectivePropsIter $dboState]  
+    set pName [DboTclHelper_sMakeCString] 
+    set pValue [DboTclHelper_sMakeCString] 
+    set pType [DboTclHelper_sMakeDboValueType] 
+    set pEdit [DboTclHelper_sMakeInt] 
+    set dboState [$propIter NextEffectiveProp $pName $pValue $pType $pEdit] 
+    while {[$dboState OK] == 1} { 
+        set name [DboTclHelper_sGetConstCharPtr $pName]
+        set value [DboTclHelper_sGetConstCharPtr $pValue]
+        # process $name and $value 
+        set dboState [$propIter NextEffectiveProp $pName $pValue $pType $pEdit] 
+    } 
+    delete_DboEffectivePropsIter $propIter
+    return
+}
 proc orbench::get_schematic {{dboDesign ""} schematic} {
     set dboState [DboState]
     if {$dboDesign == ""} {
@@ -92,5 +145,43 @@ proc orbench::scan_parts {dboPage schematicType} {
     set dboPartInst [$partIter NextPartInst $dboState]
     }
     delete_DboPagePartInstsIter $partIter
+    return
+}
+proc orbench::scan_wires {dboPage} {
+    set dboState [DboState]
+    set wireIter [$dboPage NewWiresIter $dboState] 
+    set dboWire [$wireIter NextWire $dboState] 
+    while {$dboWire != "NULL"} { 
+        set objType [$dboWire GetObjectType] 
+        if {$objType == $::DboBaseObject_WIRE_SCALAR} { 
+            # process scalar $dboWire
+        } elseif {$objType == $::DboBaseObject_WIRE_BUS} { 
+            # process bus $dboWire 
+        } 
+        set dboWire [$wireIter NextWire $dboState] 
+    } 
+    delete_DboPageWiresIter $wireIter
+    return
+}
+proc orbench::scan_globals {dboPage} {
+    set dboState [DboState]
+    set globalIter [$dboPage NewGlobalsIter $dboState]  
+    set dboGlobal [$globalIter NextGlobal $dboState] 
+    while {$dboGlobal != "NULL"} { 
+        # process bus $dboGlobal
+        set dboGlobal [$globalIter NextGlobal $dboState] 
+    } 
+    delete_DboPageGlobalsIter $globalIter
+    return
+}
+proc orbench::scan_offpages {dboPage} {
+    set dboState [DboState]
+    set offpageIter [$dboPage NewOffPageConnectorsIter $dboState $::IterDefs_ALL] 
+    set dbOffpage [$offpageIter NextOffPageConnector $dboState] 
+    while {$dbOffpage !="NULL"} { 
+        # process $dbOffpage
+        set dbOffpage [$offpageIter NextOffPageConnector $dboState] 
+    } 
+    delete_DboPageOffPageConnectorsIter $offpageIter
     return
 }
